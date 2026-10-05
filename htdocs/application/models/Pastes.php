@@ -96,7 +96,7 @@ class Pastes extends CI_Model
         } else {
             $url = $this->_get_url($data['pid']);
             $shorturl = $this->_shorten_url($url);
-            $data['snipurl'] = $shorturl;
+            $data['snipurl'] = $shorturl ? $shorturl : 0;
         }
         $data['ip_address'] = $this->input->ip_address();
         $this->db->insert('pastes', $data);
@@ -437,7 +437,7 @@ class Pastes extends CI_Model
             $data['raw'] = $row['raw'];
             $data['hits'] = $row['hits'];
             $data['hits_updated'] = $row['hits_updated'];
-            $data['snipurl'] = $row['snipurl'];
+            $data['snipurl'] = ($row['snipurl'] === 'false') ? 0 : $row['snipurl'];
             $inreply = $row['replyto'];
         }
 
@@ -840,7 +840,7 @@ class Pastes extends CI_Model
                 $data['raw'] = $row['raw'];
                 $data['hits'] = $row['hits'];
                 $data['hits_updated'] = $row['hits_updated'];
-                $data['snipurl'] = $row['snipurl'];
+                $data['snipurl'] = ($row['snipurl'] === 'false') ? 0 : $row['snipurl'];
                 $inreply = $row['replyto'];
             }
 
