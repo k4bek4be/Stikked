@@ -80,6 +80,13 @@ In the folder doc/, you will find:
 Changelog
 ---------
 
+### Version 0.15.0 (in development):
+
+* PHP 8.x compatibility (tested with PHP 8.3), CodeIgniter updated to 3.1.13
+* PostgreSQL fixes: recent/trending API, paging, case-insensitive search, short URL handling, database backup
+* Paging offset is now validated (SQL injection fix)
+* Polish translation fixes
+
 ### Version 0.14.0:
 
 * Rewritten the Docker setup to be simple and clean:
