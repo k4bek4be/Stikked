@@ -609,12 +609,13 @@ class Pastes extends CI_Model
         $offset = ($root == 'api/recent') ? 0 : $page;
         $search = $this->input->get('search');
         $TABLE = $this->config->item('db_prefix') . "pastes";
+        $LIKE = ($this->db->dbdriver == "postgre") ? 'ILIKE' : 'LIKE';
 
         if ($search) {
             $search = '%' . $search . '%';
 
             // count total results
-            $sql = "SELECT id FROM $TABLE WHERE private = 0 AND (title LIKE ? OR raw LIKE ?)";
+            $sql = "SELECT id FROM $TABLE WHERE private = 0 AND (title $LIKE ? OR raw $LIKE ?)";
             $query = $this->db->query($sql, array(
                 $search,
                 $search,
@@ -622,7 +623,7 @@ class Pastes extends CI_Model
             $total_rows = $query->num_rows();
 
             // query
-            $sql = "SELECT id, title, name, created, pid, lang, raw FROM $TABLE WHERE private = 0 AND (title LIKE ? OR raw LIKE ?) ORDER BY created DESC LIMIT $limit OFFSET $offset";
+            $sql = "SELECT id, title, name, created, pid, lang, raw FROM $TABLE WHERE private = 0 AND (title $LIKE ? OR raw $LIKE ?) ORDER BY created DESC LIMIT $limit OFFSET $offset";
             $query = $this->db->query($sql, array(
                 $search,
                 $search,
@@ -681,12 +682,13 @@ class Pastes extends CI_Model
         $offset = ($root == 'api/trending') ? 0 : $page;
         $search = $this->input->get('search');
         $TABLE = $this->config->item('db_prefix') . "pastes";
+        $LIKE = ($this->db->dbdriver == "postgre") ? 'ILIKE' : 'LIKE';
 
         if ($search) {
             $search = '%' . $search . '%';
 
             // count total results
-            $sql = "SELECT id FROM $TABLE WHERE private = 0 AND (title LIKE ? OR raw LIKE ?)";
+            $sql = "SELECT id FROM $TABLE WHERE private = 0 AND (title $LIKE ? OR raw $LIKE ?)";
             $query = $this->db->query($sql, array(
                 $search,
                 $search,
@@ -694,7 +696,7 @@ class Pastes extends CI_Model
             $total_rows = $query->num_rows();
 
             // query
-            $sql = "SELECT id, title, name, created, pid, lang, raw, hits FROM $TABLE WHERE private = 0 AND (title LIKE ? OR raw LIKE ?) ORDER BY hits DESC, created DESC LIMIT $limit OFFSET $offset";
+            $sql = "SELECT id, title, name, created, pid, lang, raw, hits FROM $TABLE WHERE private = 0 AND (title $LIKE ? OR raw $LIKE ?) ORDER BY hits DESC, created DESC LIMIT $limit OFFSET $offset";
             $query = $this->db->query($sql, array(
                 $search,
                 $search,
