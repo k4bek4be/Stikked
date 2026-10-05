@@ -573,6 +573,7 @@ class Pastes extends CI_Model
         } else {
             $pid = $this->uri->segment($seg);
         }
+        $data = array();
         $this->db->select('title, name, created, pid, raw, lang');
         $this->db->where('replyto', $pid);
         $this->db->order_by('id', 'desc');
@@ -638,6 +639,7 @@ class Pastes extends CI_Model
             $query = $this->db->query($sql);
         }
 
+        $data = array('pastes' => array());
         if ($query->num_rows() > 0) {
             $n = 0;
             foreach ($query->result_array() as $row) {
@@ -709,6 +711,7 @@ class Pastes extends CI_Model
             $query = $this->db->query($sql);
         }
 
+        $data = array('pastes' => array());
         if ($query->num_rows() > 0) {
             $n = 0;
             foreach ($query->result_array() as $row) {
@@ -753,6 +756,7 @@ class Pastes extends CI_Model
         $this->db->order_by('created', 'desc');
         $query = $this->db->get('pastes', $amount, $page);
 
+        $data = array('pastes' => array());
         if ($query->num_rows() > 0) {
             $n = 0;
             foreach ($query->result_array() as $row) {
