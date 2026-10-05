@@ -114,6 +114,9 @@
 									"10080" => lang('exp_1w'),
 									"40320" => lang('exp_4w'),
 								);
+				if (config_item('disable_keep_forever')) {
+					unset($options['0']);
+				}
 				echo form_dropdown('expire', $options, $expire_set, $expire_extra); ?>
 			</div>
 		</div>
