@@ -92,7 +92,7 @@ class Pastes extends CI_Model
         }
 
         if ($this->input->post('snipurl') == false) {
-            $data['snipurl'] = false;
+            $data['snipurl'] = 0;
         } else {
             $url = $this->_get_url($data['pid']);
             $shorturl = $this->_shorten_url($url);
@@ -106,7 +106,7 @@ class Pastes extends CI_Model
             echo '<!DOCTYPE html><html><head><title>Warning!</title></head><body>';
             echo '<pre>Copy this URL:</pre>';
             echo '<input type="text" style="background-color: black; color: white; margin: 0; width: 99%;" value="' . site_url('view/' . $data['pid']) . '" /><!-- behind you --><br /><br />';
-            if ($data['snipurl'] !== false) {
+            if ($data['snipurl']) {
                 echo '<br>Shorturl: ' . $shorturl . '">' . $shorturl . '<br>';
             }
             echo "<pre>It will become invalid on visit (will be deleted after first read)</pre><br />\n";
