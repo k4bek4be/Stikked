@@ -135,6 +135,7 @@ function recaptcha_get_html($pubkey, $error = null, $use_ssl = false)
 /**
  * A ReCaptchaResponse is returned from recaptcha_check_answer()
  */
+#[\AllowDynamicProperties]
 class ReCaptchaResponse
 {
     public $is_valid;

@@ -31,6 +31,7 @@
  * @todo            Allow for privileges in groups of groups in AD
  * @todo            Rework roles system a little bit to a "auth level" paradigm
  */
+#[\AllowDynamicProperties]
 class Auth_Ldap {
     function __construct() {
         $this->ci =& get_instance();

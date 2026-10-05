@@ -2,6 +2,7 @@
     exit('No direct script access allowed');
 }
 
+#[\AllowDynamicProperties]
 class Iphone extends CI_Controller
 {
 

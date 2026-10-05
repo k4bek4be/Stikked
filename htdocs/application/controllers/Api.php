@@ -4,6 +4,7 @@
 
 include_once 'application/controllers/Main.php';
 
+#[\AllowDynamicProperties]
 class Api extends Main
 {
 

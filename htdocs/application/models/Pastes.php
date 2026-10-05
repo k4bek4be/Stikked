@@ -2,6 +2,7 @@
     exit('No direct script access allowed');
 }
 
+#[\AllowDynamicProperties]
 class Pastes extends CI_Model
 {
 

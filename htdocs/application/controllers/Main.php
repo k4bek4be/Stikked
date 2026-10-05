@@ -2,6 +2,7 @@
     exit('No direct script access allowed');
 }
 
+#[\AllowDynamicProperties]
 class Main extends CI_Controller
 {
 

@@ -4,6 +4,7 @@
  * @created 9 Dec 2008
  */
 
+#[\AllowDynamicProperties]
 class Curl {
 	
     private $CI;                // CodeIgniter instance

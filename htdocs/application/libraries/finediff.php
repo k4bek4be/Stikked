@@ -75,12 +75,14 @@
 *   TODO: How often this case occurs? Is it worth it? Can only
 *   be done as a postprocessing method (->optimize()?)
 */
+#[\AllowDynamicProperties]
 abstract class FineDiffOp {
 	abstract public function getFromLen();
 	abstract public function getToLen();
 	abstract public function getOpcode();
 	}
 
+#[\AllowDynamicProperties]
 class FineDiffDeleteOp extends FineDiffOp {
 	public function __construct($len) {
 		$this->fromLen = $len;
@@ -99,6 +101,7 @@ class FineDiffDeleteOp extends FineDiffOp {
 		}
 	}
 
+#[\AllowDynamicProperties]
 class FineDiffInsertOp extends FineDiffOp {
 	public function __construct($text) {
 		$this->text = $text;
@@ -121,6 +124,7 @@ class FineDiffInsertOp extends FineDiffOp {
 		}
 	}
 
+#[\AllowDynamicProperties]
 class FineDiffReplaceOp extends FineDiffOp {
 	public function __construct($fromLen, $text) {
 		$this->fromLen = $fromLen;
@@ -150,6 +154,7 @@ class FineDiffReplaceOp extends FineDiffOp {
 		}
 	}
 
+#[\AllowDynamicProperties]
 class FineDiffCopyOp extends FineDiffOp {
 	public function __construct($len) {
 		$this->len = $len;
@@ -176,6 +181,7 @@ class FineDiffCopyOp extends FineDiffOp {
 *
 * Collection of ops
 */
+#[\AllowDynamicProperties]
 class FineDiffOps {
 	public function appendOpcode($opcode, $from, $from_offset, $from_len) {
 		if ( $opcode === 'c' ) {
@@ -197,6 +203,7 @@ class FineDiffOps {
 * TODO: Document
 *
 */
+#[\AllowDynamicProperties]
 class FineDiff {
 
 	/**------------------------------------------------------------------------

@@ -107,6 +107,7 @@
  * @author Stephen Clay <steve@mrclay.org>
  * @author http://code.google.com/u/1stvamp/ (Issue 64 patch)
  */
+#[\AllowDynamicProperties]
 class Minify_CSS {
 
     /**
@@ -429,6 +430,7 @@ class Minify_CSS {
  * @package Minify
  * @author Stephen Clay <steve@mrclay.org>
  */
+#[\AllowDynamicProperties]
 class Minify_CommentPreserver {
     
     /**

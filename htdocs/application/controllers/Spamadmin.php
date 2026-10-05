@@ -2,6 +2,7 @@
     exit('No direct script access allowed');
 }
 
+#[\AllowDynamicProperties]
 class Spamadmin extends CI_Controller
 {
 

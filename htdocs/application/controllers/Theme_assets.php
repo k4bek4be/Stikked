@@ -2,6 +2,7 @@
     exit('No direct script access allowed');
 }
 
+#[\AllowDynamicProperties]
 class Theme_assets extends CI_Controller
 {
     public function __construct()

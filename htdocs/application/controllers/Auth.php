@@ -27,6 +27,7 @@ along with Auth_Ldap.  If not, see <http://www.gnu.org/licenses/>.
  * @license     GNU Lesser General Public License
  */
 
+#[\AllowDynamicProperties]
 class Auth extends CI_Controller
 {
 
