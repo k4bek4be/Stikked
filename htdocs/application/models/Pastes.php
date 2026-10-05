@@ -466,8 +466,8 @@ class Pastes extends CI_Model
                         //diff
                         //yes, I'm aware, two times htmlspecialchars_decode(). Needs to be, since it's saved that way in the DB from the original stikked author ages ago ;)
                         include_once APPPATH . '/libraries/finediff.php';
-                        $from_text = htmlspecialchars_decode(utf8_decode($row['raw']));
-                        $to_text = htmlspecialchars_decode(utf8_decode($data['raw']));
+                        $from_text = htmlspecialchars_decode(mb_convert_encoding($row['raw'], 'ISO-8859-1', 'UTF-8'));
+                        $to_text = htmlspecialchars_decode(mb_convert_encoding($data['raw'], 'ISO-8859-1', 'UTF-8'));
                         $opcodes = FineDiff::getDiffOpcodes($from_text, $to_text, FineDiff::$wordGranularity);
                         $to_text = FineDiff::renderToTextFromOpcodes($from_text, $opcodes);
                         $data['paste'] = htmlspecialchars_decode($this->_format_diff(nl2br(FineDiff::renderDiffToHTMLFromOpcodes($from_text, $opcodes))));
