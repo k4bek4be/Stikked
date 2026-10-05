@@ -35,7 +35,7 @@ class Api extends Main
     public function create()
     {
 
-        if (config_item('apikey') != $this->input->get('apikey') && config_item('soft_api') == false) {
+        if (!$this->_valid_apikey() && config_item('soft_api') == false) {
             die("Invalid API key\n");
         }
         $this->load->model('pastes');
@@ -49,6 +49,10 @@ class Api extends Main
             if (!$this->input->post('lang')) {
                 $_POST['lang'] = 'text';
             }
+
+            if (!$this->languages->valid_language($this->input->post('lang'))) {
+                die("Invalid language\n");
+            }
             $_POST['code'] = $this->input->post('text');
 
             if ($this->config->item('private_only')) {
@@ -61,7 +65,7 @@ class Api extends Main
                 die("You are not allowed to paste\n");
             }
 
-            if (config_item('soft_api') == true && (config_item('apikey') == $this->input->get('apikey'))) {
+            if (config_item('soft_api') == true && $this->_valid_apikey()) {
 
                 //pass
 
@@ -86,7 +90,7 @@ class Api extends Main
     public function paste()
     {
 
-        if (config_item('apikey') != $this->input->get('apikey')) {
+        if (!$this->_valid_apikey()) {
             die("Invalid API key\n");
         }
 
@@ -109,7 +113,7 @@ class Api extends Main
     public function random()
     {
 
-        if (config_item('apikey') != $this->input->get('apikey')) {
+        if (!$this->_valid_apikey()) {
             die("Invalid API key\n");
         }
 
@@ -124,7 +128,7 @@ class Api extends Main
     public function recent()
     {
 
-        if (config_item('apikey') != $this->input->get('apikey')) {
+        if (!$this->_valid_apikey()) {
             die("Invalid API key\n");
         }
 
@@ -150,7 +154,7 @@ class Api extends Main
     public function trending()
     {
 
-        if (config_item('apikey') != $this->input->get('apikey')) {
+        if (!$this->_valid_apikey()) {
             die("Invalid API key\n");
         }
 
@@ -176,11 +180,16 @@ class Api extends Main
 
     public function langs()
     {
-        if (config_item('apikey') != $this->input->get('apikey')) {
+        if (!$this->_valid_apikey()) {
             die("Invalid API key\n");
         }
 
         $languages = $this->languages->get_languages();
         echo json_encode($languages);
+    }
+
+    private function _valid_apikey()
+    {
+        return hash_equals((string) config_item('apikey'), (string) $this->input->get('apikey'));
     }
 }

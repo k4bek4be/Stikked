@@ -83,7 +83,7 @@ class Theme_assets extends CI_Controller
 
     public function fonts()
     {
-        $font_file = $this->uri->segment(4);
+        $font_file = basename($this->uri->segment(4));
 
         //file path
         $file_path = 'themes/' . $this->theme . '/fonts/' . $font_file;
@@ -157,8 +157,8 @@ class Theme_assets extends CI_Controller
         array_shift($segments);
         array_shift($segments);
         array_shift($segments);
-        $js_file = implode('/', $segments);
-        $js_file = str_replace('../', '', $js_file);
+        $js_file = implode('/', array_diff($segments, array('.', '..', '')));
+        $js_file = str_replace(array('\\', "\0"), '', $js_file);
 
         //file path
         $file_path = 'themes/' . $this->theme . '/js/' . $js_file;

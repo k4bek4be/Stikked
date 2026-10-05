@@ -85,6 +85,7 @@ Changelog
 * PHP 8.x compatibility (tested with PHP 8.3), CodeIgniter updated to 3.1.13
 * PostgreSQL fixes: recent/trending API, paging, case-insensitive search, short URL handling, database backup
 * Paging offset is now validated (SQL injection fix)
+* Security fixes: reflected XSS (search parameter, paste form), CSRF protection for Spamadmin, random unguessable paste IDs, constant-time comparison of API key / backup / spamadmin / cron credentials, LDAP filter escaping, API language validation, backup no longer includes session data, `post_encrypted` honours the IP blacklist, fixed reCAPTCHA verification request
 * Polish translation fixes
 
 ### Version 0.14.0:

@@ -359,8 +359,8 @@ class Main extends CI_Controller
             $data['private_set'] = $this->input->post('private');
             $data['snipurl_set'] = $this->input->post('snipurl');
             $data['paste_set'] = htmlspecialchars($this->input->post('code'));
-            $data['title_set'] = $this->input->post('title');
-            $data['reply'] = $this->input->post('reply');
+            $data['title_set'] = htmlspecialchars((string) $this->input->post('title'));
+            $data['reply'] = htmlspecialchars((string) $this->input->post('reply'));
             $data['lang_set'] = $this->input->post('lang');
         }
         return $data;
@@ -450,7 +450,12 @@ class Main extends CI_Controller
     {
         $this->_valid_authentication();
 
-        if ($this->_valid_captcha($this->input->post('captcha'))) {
+        $this->load->library('form_validation');
+
+        if (!$this->_valid_ip()) {
+            set_status_header(403);
+            echo 'E_BLOCKED';
+        } else if ($this->_valid_captcha($this->input->post('captcha'))) {
             $this->load->model('pastes');
             $_POST['private'] = 1;
             $_POST['snipurl'] = 0;
@@ -608,7 +613,7 @@ class Main extends CI_Controller
         $this->load->model('pastes');
         $key = $this->uri->segment(2);
 
-        if ($key != config_item('cron_key')) {
+        if ($key === null || $key === '' || config_item('cron_key') === '' || !hash_equals((string) config_item('cron_key'), (string) $key)) {
             show_404();
         } else {
             $this->pastes->cron();
@@ -693,7 +698,7 @@ class Main extends CI_Controller
             $pk = $this->recaptcha_privatekey;
             $ra = $_SERVER['REMOTE_ADDR'];
             $rf = trim($this->input->post('g-recaptcha-response'));
-            $url = "https://www.google.com/recaptcha/api/siteverify?secret=" . $pk . "&response;=" . $rf . "&remoteip;=" . $ra;
+            $url = "https://www.google.com/recaptcha/api/siteverify?secret=" . urlencode($pk) . "&response=" . urlencode($rf) . "&remoteip=" . urlencode($ra);
             $response = $this->curl->simple_get($url);
             $status = json_decode($response, true);
             $recaptcha_response = new stdClass();

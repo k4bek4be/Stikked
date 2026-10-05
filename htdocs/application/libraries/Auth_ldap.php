@@ -105,6 +105,7 @@ class Auth_Ldap {
                             'role' => $user_info['role'],
                             'logged_in' => TRUE);
     
+        $this->ci->session->sess_regenerate(TRUE);
         $this->ci->session->set_userdata($customdata);
         return TRUE;
     }
@@ -188,7 +189,7 @@ class Auth_Ldap {
         }
 
         log_message('debug', 'Successfully bound to directory.  Performing dn lookup for '.$username);
-        $filter = '('.$this->login_attribute.'='.$username.')';
+        $filter = '('.$this->login_attribute.'='.$this->ldap_escape($username).')';
         $search = ldap_search($this->ldapconn, $this->basedn, $filter, 
                 array('dn', $this->login_attribute, 'cn'));
         $entries = ldap_get_entries($this->ldapconn, $search);
@@ -252,7 +253,7 @@ class Auth_Ldap {
      */
     private function _get_role($username) {
     
-        $filter = '('.$this->member_attribute.'='.$username.')';
+        $filter = '('.$this->member_attribute.'='.$this->ldap_escape($username).')';
         $search = ldap_search($this->ldapconn, $this->basedn, $filter, array('cn'));
         if(! $search ) {
             log_message('error', "Error searching for group:".ldap_error($this->ldapconn));

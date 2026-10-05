@@ -63,19 +63,11 @@ class Pastes extends CI_Model
         }
 
         do {
-            $data['pid'] = substr(md5(md5(mt_rand(0, 1000000) . time())), rand(0, 24), 8);
+            $data['pid'] = bin2hex(random_bytes(4));
             $this->db->select('id');
             $this->db->where('pid', $data['pid']);
             $query = $this->db->get('pastes');
-
-            if ($query->num_rows > 0 or $data['pid'] == 'download') {
-                $n = 0;
-                break;
-            } else {
-                $n = 1;
-                break;
-            }
-        } while ($n == 0);
+        } while ($query->num_rows() > 0 or $data['pid'] == 'download');
 
         $burn = false;
         if ($this->input->post('expire') == '0') {
@@ -88,7 +80,7 @@ class Pastes extends CI_Model
         } else {
             $format = 'Y-m-d H:i:s';
             $data['toexpire'] = 1;
-            $data['expire'] = time() + (60 * $this->input->post('expire'));
+            $data['expire'] = time() + (60 * (int) $this->input->post('expire'));
         }
 
         if ($this->input->post('snipurl') == false) {
@@ -665,7 +657,7 @@ class Pastes extends CI_Model
         $config['full_tag_open'] = '<div class="pages">';
         $config['full_tag_close'] = '</div>';
         $config['uri_segment'] = $seg;
-        $searchparams = ($this->input->get('search') ? '?search=' . $this->input->get('search') : '');
+        $searchparams = ($this->input->get('search') ? '?search=' . urlencode((string) $this->input->get('search')) : '');
         $config['first_url'] = '0' . $searchparams;
         $config['suffix'] = $searchparams;
         $this->pagination->initialize($config);
@@ -735,7 +727,7 @@ class Pastes extends CI_Model
         $config['full_tag_open'] = '<div class="pages">';
         $config['full_tag_close'] = '</div>';
         $config['uri_segment'] = $seg;
-        $searchparams = ($this->input->get('search') ? '?search=' . $this->input->get('search') : '');
+        $searchparams = ($this->input->get('search') ? '?search=' . urlencode((string) $this->input->get('search')) : '');
         $config['first_url'] = '0' . $searchparams;
         $config['suffix'] = $searchparams;
         $this->pagination->initialize($config);

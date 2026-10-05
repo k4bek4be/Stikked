@@ -97,6 +97,6 @@ class Auth extends CI_Controller
     }
     public function alpha_dash_dot($str)
     {
-        return (!preg_match("/^([-a-z0-9_\-\.])+$/i", $str)) ? false : true;
+        return (!preg_match("/^([-a-z0-9_\-\.])+$/iD", $str)) ? false : true;
     }
 }

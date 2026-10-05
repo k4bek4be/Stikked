@@ -12,7 +12,7 @@ class Unittest extends CI_Controller
 
         //protection
 
-        if ($_SERVER['HTTP_HOST'] != 'stikked') {
+        if (ENVIRONMENT === 'production' || $_SERVER['HTTP_HOST'] != 'stikked') {
             exit;
         }
     }

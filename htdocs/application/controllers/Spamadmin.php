@@ -17,7 +17,9 @@ class Spamadmin extends CI_Controller
         // FastCGI doesn't provide PHP_AUTH_USER and PHP_AUTH_PW, apparently?
         if (empty($_SERVER['PHP_AUTH_USER']) && empty($_SERVER['PHP_AUTH_PW'])) {
             if (!empty($_SERVER['HTTP_AUTHORIZATION'])) {
-                list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+                $credentials = explode(':', (string) base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)), 2);
+                $_SERVER['PHP_AUTH_USER'] = $credentials[0];
+                $_SERVER['PHP_AUTH_PW'] = isset($credentials[1]) ? $credentials[1] : '';
             }
         }
 
@@ -30,7 +32,7 @@ class Spamadmin extends CI_Controller
             $_SERVER['PHP_AUTH_PW'] = "";
         }
 
-        if ($user === '' || $pass === '' || $_SERVER['PHP_AUTH_USER'] !== $user || $_SERVER['PHP_AUTH_PW'] !== $pass) {
+        if ($user === '' || $pass === '' || !is_string($user) || !is_string($pass) || !hash_equals($user, (string) $_SERVER['PHP_AUTH_USER']) || !hash_equals($pass, (string) $_SERVER['PHP_AUTH_PW'])) {
             header('WWW-Authenticate: Basic realm="Spamadmin"');
             header('HTTP/1.0 401 Unauthorized');
             exit;
@@ -43,6 +45,7 @@ class Spamadmin extends CI_Controller
         $pastes_to_delete = $this->input->post('pastes_to_delete');
 
         if ($pastes_to_delete) {
+            $this->_require_same_origin();
             foreach (explode(' ', $pastes_to_delete) as $pid) {
                 $this->db->where('pid', $pid);
                 $this->db->delete('pastes');
@@ -61,6 +64,7 @@ class Spamadmin extends CI_Controller
         $ip_address = $this->uri->segment(2);
 
         if ($this->input->post('confirm_remove') && $ip_address != '') {
+            $this->_require_same_origin();
             $this->db->where('ip_address', $ip_address);
             $this->db->delete('pastes');
             $paste_count = $this->db->affected_rows();
@@ -132,9 +136,26 @@ class Spamadmin extends CI_Controller
 
     public function unblock_ip()
     {
+        $this->_require_same_origin();
         $ip_address = $this->uri->segment(4);
         $this->db->where('ip_address', $ip_address);
         $this->db->delete('blocked_ips');
         redirect('spamadmin/blacklist');
+    }
+
+    /**
+     * CSRF protection for state-changing actions: browsers send the basic-auth
+     * credentials automatically, so require that the request originates from this host.
+     */
+    private function _require_same_origin()
+    {
+        $source = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
+        $parts = parse_url($source);
+        $host = isset($parts['host']) ? $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') : '';
+        $own = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+
+        if ($host === '' || strcasecmp($host, $own) !== 0) {
+            show_error('Cross-site request rejected (missing or foreign Origin/Referer header).', 403);
+        }
     }
 }
