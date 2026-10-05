@@ -28,10 +28,34 @@ class Backup extends CI_Controller
         $this->load->dbutil();
 
         // Backup your entire database and assign it to a variable
-        $backup = &$this->dbutil->backup();
+        if ($this->db->dbdriver == 'postgre') {
+            // CodeIgniter's backup() is not supported on PostgreSQL, dump the data ourselves
+            $backup = gzencode($this->_dump_postgre());
+        } else {
+            $backup = &$this->dbutil->backup();
+        }
 
         // Load the download helper and send the file to your desktop
         $this->load->helper('download');
         force_download('stikked.gz', $backup);
+    }
+
+    private function _dump_postgre()
+    {
+        $dump = "-- Stikked data dump\n";
+
+        foreach ($this->db->list_tables() as $table) {
+            $rows = $this->db->get($table)->result_array();
+
+            foreach ($rows as $row) {
+                $values = array();
+
+                foreach ($row as $value) {
+                    $values[] = ($value === null) ? 'NULL' : $this->db->escape($value);
+                }
+                $dump .= 'INSERT INTO ' . $this->db->protect_identifiers($table, true) . ' (' . implode(', ', array_map(array($this->db, 'escape_identifiers'), array_keys($row))) . ') VALUES (' . implode(', ', $values) . ");\n";
+            }
+        }
+        return $dump;
     }
 }
